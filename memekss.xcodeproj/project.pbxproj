@@ -21,7 +21,7 @@
 
 /* Begin PBXFileReference section */
 		140C08EF1C59979B00FA2FFA /* Meme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meme.swift; sourceTree = "<group>"; };
-		147274F61C3ECB1D000729F0 /* meme 1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "meme 1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		147274F61C3ECB1D000729F0 /* memekss.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = memekss.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		147274F91C3ECB1D000729F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		147274FB1C3ECB1D000729F0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		147274FE1C3ECB1D000729F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -56,7 +56,7 @@
 		147274F71C3ECB1D000729F0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				147274F61C3ECB1D000729F0 /* meme 1.app */,
+				147274F61C3ECB1D000729F0 /* memekss.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,9 +82,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		147274F51C3ECB1D000729F0 /* meme 1 */ = {
+		147274F51C3ECB1D000729F0 /* memekss */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 147275081C3ECB1D000729F0 /* Build configuration list for PBXNativeTarget "meme 1" */;
+			buildConfigurationList = 147275081C3ECB1D000729F0 /* Build configuration list for PBXNativeTarget "memekss" */;
 			buildPhases = (
 				147274F21C3ECB1D000729F0 /* Sources */,
 				147274F31C3ECB1D000729F0 /* Frameworks */,
@@ -94,9 +94,9 @@
 			);
 			dependencies = (
 			);
-			name = "meme 1";
+			name = memekss;
 			productName = "meme 1";
-			productReference = 147274F61C3ECB1D000729F0 /* meme 1.app */;
+			productReference = 147274F61C3ECB1D000729F0 /* memekss.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -115,7 +115,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 147274F11C3ECB1D000729F0 /* Build configuration list for PBXProject "meme 1" */;
+			buildConfigurationList = 147274F11C3ECB1D000729F0 /* Build configuration list for PBXProject "memekss" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -128,7 +128,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				147274F51C3ECB1D000729F0 /* meme 1 */,
+				147274F51C3ECB1D000729F0 /* memekss */,
 			);
 		};
 /* End PBXProject section */
@@ -270,8 +270,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "meme 1/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stukenborg.meme-1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stukenborg.memekss;
+				PRODUCT_NAME = memekss;
 			};
 			name = Debug;
 		};
@@ -281,15 +281,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "meme 1/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stukenborg.meme-1";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stukenborg.memekss;
+				PRODUCT_NAME = memekss;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		147274F11C3ECB1D000729F0 /* Build configuration list for PBXProject "meme 1" */ = {
+		147274F11C3ECB1D000729F0 /* Build configuration list for PBXProject "memekss" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				147275061C3ECB1D000729F0 /* Debug */,
@@ -298,7 +298,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		147275081C3ECB1D000729F0 /* Build configuration list for PBXNativeTarget "meme 1" */ = {
+		147275081C3ECB1D000729F0 /* Build configuration list for PBXNativeTarget "memekss" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				147275091C3ECB1D000729F0 /* Debug */,

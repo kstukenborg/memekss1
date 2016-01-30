@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "147274F51C3ECB1D000729F0"
-               BuildableName = "meme 1.app"
-               BlueprintName = "meme 1"
-               ReferencedContainer = "container:meme 1.xcodeproj">
+               BuildableName = "memekss.app"
+               BlueprintName = "memekss"
+               ReferencedContainer = "container:memekss.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "147274F51C3ECB1D000729F0"
-            BuildableName = "meme 1.app"
-            BlueprintName = "meme 1"
-            ReferencedContainer = "container:meme 1.xcodeproj">
+            BuildableName = "memekss.app"
+            BlueprintName = "memekss"
+            ReferencedContainer = "container:memekss.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "147274F51C3ECB1D000729F0"
-            BuildableName = "meme 1.app"
-            BlueprintName = "meme 1"
-            ReferencedContainer = "container:meme 1.xcodeproj">
+            BuildableName = "memekss.app"
+            BlueprintName = "memekss"
+            ReferencedContainer = "container:memekss.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "147274F51C3ECB1D000729F0"
-            BuildableName = "meme 1.app"
-            BlueprintName = "meme 1"
-            ReferencedContainer = "container:meme 1.xcodeproj">
+            BuildableName = "memekss.app"
+            BlueprintName = "memekss"
+            ReferencedContainer = "container:memekss.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

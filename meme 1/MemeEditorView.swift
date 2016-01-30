@@ -14,6 +14,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var takePictureOutlet: UIBarButtonItem!
     @IBOutlet weak var pictureDisplayed: UIImageView!
+    @IBOutlet weak var shareOutlet: UIBarButtonItem!
     
     let memeTextAttributes = [
         //black outline
@@ -26,14 +27,23 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSStrokeWidthAttributeName : -3
         // NSStrokeWidthAttributeName : 0
     ]
+    struct Meme {
+        
+        var topText : String
+        var bottomText : String
+        var originalImage : UIImage
+        var memedImage : UIImage
+        
+    }
     
     override func viewDidLoad() {
+        print("viewDidLoad")
         super.viewDidLoad()
         let navigationController = UINavigationController()
         navigationController.delegate = self
         self.topTextField.delegate = self
         self.bottomTextField.delegate = self
-        
+        shareOutlet.enabled = false
         topTextField.defaultTextAttributes = memeTextAttributes
         bottomTextField.defaultTextAttributes = memeTextAttributes
         topTextField.textAlignment  = NSTextAlignment.Center
@@ -53,7 +63,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     override func viewWillAppear(animated: Bool) {
-        
+        print("viewWillAppear")
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
         self.navigationController?.toolbarHidden = false
@@ -63,23 +73,25 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func subscribeToKeyboardNotifications(){
-        
+        print("subscribeToKeyboardNotifications")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:"    , name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:" , name: UIKeyboardWillHideNotification, object:nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
+        print("viewWillDisappear")
         super.viewWillDisappear(animated)
         unsubscribeToKeyboardNotifications()
     }
     
     func unsubscribeToKeyboardNotifications(){
+        print("unsubscribeToKeyboardNotifications")
         NSNotificationCenter.defaultCenter().removeObserver(self, name:
             UIKeyboardWillShowNotification, object: nil)
     }
     
-    func keyboardWillShow(notification: NSNotification) {
-        
+    func keyboardWillShow(notification: NSNotification) -> Void{
+        print("keyboardWillShow")
         if bottomTextField.isFirstResponder(){
             view.frame.origin.y -= getKeyboardHeight(notification)
         }else if topTextField.isFirstResponder(){
@@ -88,15 +100,21 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func keyboardWillHide(notification:NSNotification) {
+        print("keyboardWillHide")
         if bottomTextField.isFirstResponder() {
             self.view.frame.origin.y = 0
         }
+        self.navigationController?.toolbarHidden = false
+        self.navigationController?.navigationBarHidden = false
+
         
     }
     
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        print("in getKeyboardHeight")
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        print(keyboardSize.CGRectValue().height)
         return keyboardSize.CGRectValue().height
     }
     
@@ -123,6 +141,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
             }
             //in storyboard, set content mode of image to aspect fit
+            shareOutlet.enabled = true
             self.dismissViewControllerAnimated(true, completion:nil)
             
     }
@@ -143,18 +162,54 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         pictureDisplayed.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
+        shareOutlet.enabled = false
         
     }
     
     /* This function brings up Apple's stock ACtivity View, displaying several options for sharing the meme.
     */
+    func save() {
+        //Create the meme
+        
+        // let meme = Meme( text: topTextField.text!, image:
+        //   imageView.image, memedImage: memedImage)
+        let meme = Meme( topText: topTextField.text!,  bottomText: bottomTextField.text!,originalImage:
+            pictureDisplayed.image!, memedImage: generateMemedImage())
+    }
+    
+    func generateMemedImage() -> UIImage
+    {
+        print("beginning of generateMemedImage")
+        self.navigationController?.toolbarHidden = true
+        self.navigationController?.navigationBarHidden = true
+        // Render view to an image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.drawViewHierarchyInRect(self.view.frame,
+            afterScreenUpdates: true)
+        let memedImage : UIImage =
+        UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.navigationController?.toolbarHidden = false
+        self.navigationController?.navigationBarHidden = false
+        print("end of generateMemedImage")
+
+        return memedImage
+    }
+
     @IBAction func shareAction(sender: AnyObject) {
+        /*
+
+        1.generate a memed image
+        2.define an instance of the ActivityViewController
+        3.pass the ActivityViewController a memedImage as an activity item
+        4.present the ActivityViewController
+*/
         
-        let textToShare = "I'm going to share the meme in 2.0, this is just a test!"
+       let memeImage1 = generateMemedImage()
+       // let textToShare = "I'm going to share the meme in 2.0, this is just a test!"
         
-        if let myWebsite = NSURL(string: "http://www.codingexplorer.com/")
-        {
-            let objectsToShare = [textToShare, myWebsite]
+        
+            let objectsToShare = [memeImage1]
             //let objectsToShare = [textToShare]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
             
@@ -162,10 +217,10 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("just presented share")
             
             
-            pictureDisplayed.image = nil
-            topTextField.text = "TOP"
-            bottomTextField.text = "BOTTOM"
-            self.navigationController?.toolbarHidden = false
+            //pictureDisplayed.image = nil
+            //topTextField.text = "TOP"
+            //bottomTextField.text = "BOTTOM"
+           // self.navigationController?.toolbarHidden = false
             
             
             
@@ -174,9 +229,10 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
             pictureDisplayed.image = nil
             topTextField.text = "TOP"
             bottomTextField.text = "BOTTOM"
+            shareOutlet.enabled = false
         }
+        
         
     
     
-}
 }
