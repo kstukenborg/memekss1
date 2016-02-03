@@ -8,14 +8,18 @@
 
 import Foundation
 import UIKit
-
+import AVFoundation
+/*
+The MemeEditorView class allows you to choose a picture, or take a picture and edit two text fields so that you
+create a meme.
+*/
 class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var takePictureOutlet: UIBarButtonItem!
     @IBOutlet weak var pictureDisplayed: UIImageView!
     @IBOutlet weak var shareOutlet: UIBarButtonItem!
-    
+       
     let memeTextAttributes = [
         //black outline
         NSStrokeColorAttributeName : UIColor.blackColor(),
@@ -27,17 +31,7 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSStrokeWidthAttributeName : -3
         // NSStrokeWidthAttributeName : 0
     ]
-    struct Meme {
-        
-        var topText : String
-        var bottomText : String
-        var originalImage : UIImage
-        var memedImage : UIImage
-        
-    }
-    
     override func viewDidLoad() {
-        print("viewDidLoad")
         super.viewDidLoad()
         let navigationController = UINavigationController()
         navigationController.delegate = self
@@ -59,127 +53,134 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.navigationController?.toolbarHidden = false
         self.navigationController?.view.backgroundColor = UIColor.blackColor()
         self.dismissViewControllerAnimated(true, completion: nil)
-        
+        topTextField.enabled = false
+        bottomTextField.enabled = false
         
     }
     override func viewWillAppear(animated: Bool) {
-        print("viewWillAppear")
         super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
         self.navigationController?.toolbarHidden = false
         self.dismissViewControllerAnimated(true, completion: nil)
-        
-        
     }
     
+    
+    /*
+    This function allows us to get notifications on the status of the keyboard.
+    */
     func subscribeToKeyboardNotifications(){
-        print("subscribeToKeyboardNotifications")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:"    , name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:" , name: UIKeyboardWillHideNotification, object:nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
-        print("viewWillDisappear")
         super.viewWillDisappear(animated)
-        unsubscribeToKeyboardNotifications()
+        self.unsubscribeToKeyboardNotifications()
     }
     
     func unsubscribeToKeyboardNotifications(){
-        print("unsubscribeToKeyboardNotifications")
         NSNotificationCenter.defaultCenter().removeObserver(self, name:
             UIKeyboardWillShowNotification, object: nil)
     }
     
     func keyboardWillShow(notification: NSNotification) -> Void{
-        print("keyboardWillShow")
         if bottomTextField.isFirstResponder(){
-            view.frame.origin.y -= getKeyboardHeight(notification)
-        }else if topTextField.isFirstResponder(){
+            self.view.frame.origin.y -= getKeyboardHeight(notification)
+        }
+        else if topTextField.isFirstResponder(){
             self.view.frame.origin.y = 0
         }
     }
     
     func keyboardWillHide(notification:NSNotification) {
-        print("keyboardWillHide")
         if bottomTextField.isFirstResponder() {
             self.view.frame.origin.y = 0
         }
         self.navigationController?.toolbarHidden = false
         self.navigationController?.navigationBarHidden = false
-
-        
     }
-    
+    /*
+    We use this function to get the keyboard height so that we can scroll up the view and still see the
+    textfield we are editing even though the keyboard is shown.
+    */
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-        print("in getKeyboardHeight")
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
-        print(keyboardSize.CGRectValue().height)
         return keyboardSize.CGRectValue().height
     }
     
+    /*
+    This function allows us to take a picture to be used in the meme.
+    */
     @IBAction func takeAPictureUsingCamera(sender: AnyObject) {
+        topTextField.enabled = true
+        bottomTextField.enabled = true
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = UIImagePickerControllerSourceType.Camera
         
         self.presentViewController(imagePickerController, animated: true, completion: nil)
     }
+    /*
+    This function allows the user to pick a picture from the pictures in albums.
+    */
     
     @IBAction func pickAnImage(sender: AnyObject) {
-        
+        topTextField.enabled = true
+        bottomTextField.enabled = true
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         self.presentViewController(imagePickerController, animated: true, completion: nil)
     }
+    
+    /*
+    This function sets the picture the user selects to be the image displayed in the memeEditorView
+    */
     func imagePickerController( _picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [String : AnyObject]){
-            
             if let image = info[UIImagePickerControllerOriginalImage] as? UIImage  {
                 self.pictureDisplayed.image = image
-                
-                
             }
-            //in storyboard, set content mode of image to aspect fit
             shareOutlet.enabled = true
             self.dismissViewControllerAnimated(true, completion:nil)
             
     }
     
     func imagePickerControllerDidCancel( _picker: UIImagePickerController){
-        
         self.dismissViewControllerAnimated(true, completion:nil)
-        
     }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        
         return true
     }
     
     //This function sets meme Editor View back to the launch state
     @IBAction func cancelAction(sender: AnyObject) {
+        
         pictureDisplayed.image = nil
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
         shareOutlet.enabled = false
+        topTextField.enabled = false
+        bottomTextField.enabled = false
         
     }
     
-    /* This function brings up Apple's stock ACtivity View, displaying several options for sharing the meme.
+    /*
+    This function creates an object meme and then saves in into the memes structure.
     */
     func save() {
-        //Create the meme
         
-        // let meme = Meme( text: topTextField.text!, image:
-        //   imageView.image, memedImage: memedImage)
         let meme = Meme( topText: topTextField.text!,  bottomText: bottomTextField.text!,originalImage:
             pictureDisplayed.image!, memedImage: generateMemedImage())
+        (UIApplication.sharedApplication().delegate as! AppDelegate).memes.append(meme)
     }
-    
+    /*
+    This function creates the memedImage.
+    */
     func generateMemedImage() -> UIImage
     {
-        print("beginning of generateMemedImage")
         self.navigationController?.toolbarHidden = true
         self.navigationController?.navigationBarHidden = true
         // Render view to an image
@@ -191,48 +192,27 @@ class MemeEditorView: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIGraphicsEndImageContext()
         self.navigationController?.toolbarHidden = false
         self.navigationController?.navigationBarHidden = false
-        print("end of generateMemedImage")
-
         return memedImage
     }
-
-    @IBAction func shareAction(sender: AnyObject) {
-        /*
-
-        1.generate a memed image
-        2.define an instance of the ActivityViewController
-        3.pass the ActivityViewController a memedImage as an activity item
-        4.present the ActivityViewController
-*/
-        
-       let memeImage1 = generateMemedImage()
-       // let textToShare = "I'm going to share the meme in 2.0, this is just a test!"
-        
-        
-            let objectsToShare = [memeImage1]
-            //let objectsToShare = [textToShare]
-            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            
-            self.presentViewController(activityVC, animated: true, completion: nil)
-            print("just presented share")
-            
-            
-            //pictureDisplayed.image = nil
-            //topTextField.text = "TOP"
-            //bottomTextField.text = "BOTTOM"
-           // self.navigationController?.toolbarHidden = false
-            
-            
-            
-        }
-        func resetMemeEditorView() {
-            pictureDisplayed.image = nil
-            topTextField.text = "TOP"
-            bottomTextField.text = "BOTTOM"
-            shareOutlet.enabled = false
-        }
-        
-        
     
+    /*
+    This function calls a function to generate the memed image and that calls a different function to save it and put
+    in an array.
+    */
+    @IBAction func shareAction(sender: AnyObject) {
+        let memeImage1 = generateMemedImage()
+        let objectsToShare = [memeImage1]
+        let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+        self.presentViewController(activityVC, animated: true, completion: nil)
+        
+        activityVC.completionWithItemsHandler = {
+            (activity, success, items, error) in
+            if success {
+                // call save to save the meme in an array.
+                self.save()
+                self.dismissViewControllerAnimated(true, completion:nil )
+            }
+        }
+    }
     
 }
